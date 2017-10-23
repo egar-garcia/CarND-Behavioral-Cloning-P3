@@ -7,10 +7,13 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Convolution2D, MaxPooling2D, Dropout, Activation
 from keras.layers import Cropping2D, Lambda
+import matplotlib.pyplot as plt
 
 
-IMAGES_PATH = 'data/IMG/'
-CORRECTION  = 0.2
+TRAINING_LOG_FILE   = 'data/driving_log.csv'
+TRAINING_IMAGES_DIR = 'data/IMG/'
+MODEL_FILE          = 'model.h5'
+STEERING_CORRECTION = 0.2
 
 def getImage(source_path):
     """
@@ -18,7 +21,7 @@ def getImage(source_path):
     training mode.
     """
     filename = source_path.split('/')[-1]
-    current_path = IMAGES_PATH + filename
+    current_path = TRAINING_IMAGES_DIR + filename
     image = cv2.imread(current_path)
     return image
 
@@ -36,13 +39,11 @@ def addImagesAndAngles(imagesSet, anglesSet, sample):
     # Adding the images to the images' set
     imagesSet.extend([image_center, image_left, image_right])
     # Adding steering angles to the angles' set, doing a correction for left and right images
-    anglesSet.extend([angle, angle + CORRECTION, angle - CORRECTION])
+    anglesSet.extend([angle, angle + STEERING_CORRECTION, angle - STEERING_CORRECTION])
 
-    # Following code is not used since the manual drive also included some laps in the other sense,
-    # however it can be used to duplicate the samples set.
-    ## Adding flipped images to extend images' and angles' sets
+    # Adding flipped images to extend images' and angles' sets
     imagesSet.extend([cv2.flip(image_center, 1), cv2.flip(image_left, 1), cv2.flip(image_right, 1)])
-    anglesSet.extend([-angle, -angle - CORRECTION, -angle + CORRECTION])
+    anglesSet.extend([-angle, -angle - STEERING_CORRECTION, -angle + STEERING_CORRECTION])
 
 
 def set_generator(samples, batch_size = 32):
@@ -88,7 +89,7 @@ model.compile(loss='mse', optimizer='adam')
 # Getting the information of the samples from a CSV file resulting from
 # the recording of the manual driving in the 'Training Model' of the simulator
 samples = []
-with open('data/driving_log.csv') as csvfile:
+with open(TRAINING_LOG_FILE) as csvfile:
     reader = csv.reader(csvfile)
     for sample in reader:
         samples.append(sample)
@@ -104,11 +105,29 @@ print('Training set size: ', len(train_samples), ', validation set size: ', len(
 
 print('Starting trainning ...')
 
-model.fit_generator(train_generator,
+EPOCHS = 5
+
+model_history = model.fit_generator(
+                    train_generator,
                     int(ceil(len(train_samples) / BATCH_SIZE)),
-                    epochs = 5,
+                    epochs = EPOCHS,
                     validation_data = validation_generator,
                     validation_steps = int(ceil(len(validation_samples) / BATCH_SIZE)))
-model.save('model.h5')
+model.save(MODEL_FILE)
+
+print('Traning finalized.')
+
+
+### Plotting the training and validation loss for each epoch
+print('Ploting loss history')
+plt.plot(model_history.history['loss'])
+plt.plot(model_history.history['val_loss'])
+plt.title('model mean squared error loss')
+plt.ylabel('mean squared error loss')
+plt.xlabel('epoch')
+plt.legend(['training set', 'validation set'], loc='upper right')
+plt.show()
 
 print('Done.')
+
+
