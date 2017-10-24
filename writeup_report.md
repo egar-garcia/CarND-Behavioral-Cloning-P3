@@ -37,7 +37,7 @@ My project includes the following files:
 * **video.py** for generating the video from a serie of images (already included in the project template, but modified to be compatible with python 3.5.2)
 * **drive.py** for driving the car in autonomous mode (already included in the project's template and not modified)
 * **bak/** a directory containing scripts, models and videos of previous runs (just for curiosity)
-* **data/** a directory containing the images and drive log to train and verify the model (just for curiosity)
+* **data.zip**, **data.z01**, **data.z02**, **data.z03**, **data.z04**, **data.z05**, **data.z06**   a compressed directory split in 99M segments containing the images and drive log training and verify the model (just for curiosity)
 
 #### 2. Submission includes functional code
 Using the Udacity provided simulator and my **drive.py** file, the car can be driven autonomously around the track by executing 
@@ -86,7 +86,12 @@ The model used an adam optimizer, so the learning rate was not tuned manually (m
 
 Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road, driving in the opposite sense and driving samples on both tracks.
 
-For details about how I created the training data, you can look at the directory **data/**. 
+For details about how I created the training data, you can extract and look at **data.zip** and its segments:
+```sh
+zip -F data.zip --out collected_data.zip
+unzip collected_data.zip
+```
+ 
 
 ### Model Architecture and Training Strategy
 
