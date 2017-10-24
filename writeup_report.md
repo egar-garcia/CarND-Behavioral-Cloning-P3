@@ -1,4 +1,4 @@
-#**Behavioral Cloning** 
+# **Behavioral Cloning** 
 
 
 **Behavioral Cloning Project**
@@ -21,12 +21,12 @@ The goals / steps of this project are the following:
 
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
+### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
 ---
-###Files Submitted & Code Quality
+### Files Submitted & Code Quality
 
-####1. Submission includes all required files and can be used to run the simulator in autonomous mode
+#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 My project includes the following files:
 * **model.py** containing the script to create and train the model
@@ -39,7 +39,7 @@ My project includes the following files:
 * **bak/** a directory containing scripts, models and videos of previous runs (just for curiosity)
 * **data/** a directory containing the images and drive log to train and verify the model (just for curiosity)
 
-####2. Submission includes functional code
+#### 2. Submission includes functional code
 Using the Udacity provided simulator and my **drive.py** file, the car can be driven autonomously around the track by executing 
 ```sh
 python drive.py model.h5
@@ -47,13 +47,13 @@ python drive.py model.h5
 
 Note: In order to develop this project I used a GPU instance set up from the scratch wich uses python 3.5.2, tensorflow 1.3.0,  keras 2.0.8, cuda 8.0.61 and cudnn 6.0.21, so the driving environment had to be set up to be compatible with these versions, specially using the same versions of keras and python. 
 
-####3. Submission code is usable and readable
+#### 3. Submission code is usable and readable
 
 The **model.py** file contains the code for training and saving the convolution neural network. The file shows the pipeline I used for training and validating the model, and it contains comments to explain how the code works.
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. An appropriate model architecture has been employed
+#### 1. An appropriate model architecture has been employed
 
 Based on the architecture presented during the lessons, my model consists of a convolution neural network with the following layers (model.py lines 71-84)
 
@@ -70,7 +70,7 @@ Based on the architecture presented during the lessons, my model consists of a c
 
 The model includes RELU layers to introduce nonlinearity, the data is normalized in the model using a Keras lambda layer (code line 72), and the images are cropped to remove the upper horizon and hood parts (code line 73) . 
 
-####2. Attempts to reduce overfitting in the model
+#### 2. Attempts to reduce overfitting in the model
 
 The model contains a dropout layer with a rate of 50% during the input in order to reduce overfitting (model.py line 24).
 
@@ -78,19 +78,19 @@ Te model also was trainned in batches of size 32, using for that purpose the met
 
 The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 18-46), including samples of-track one and track-two, driving in counter sense, and the images were also flipped. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
-####3. Model parameter tuning
+#### 3. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 86).
 
-####4. Appropriate training data
+#### 4. Appropriate training data
 
 Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road, driving in the opposite sense and driving samples on both tracks.
 
 For details about how I created the training data, you can look at the directory **data/**. 
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. Solution Design Approach
+#### 1. Solution Design Approach
 
 My first step was to use a convolution neural network model similar to the one exposed during the lessons, I thought this model might be appropriate because it was showing progressive improvements during the evolution of the examples.
 
@@ -100,7 +100,7 @@ A problem I was facing was that during the tests was that the car was exiting on
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road, in the case of the track-two the model was doing a better job than me on the manual traning.
 
-####2. Final Model Architecture
+#### 2. Final Model Architecture
 
 The final model architecture (model.py lines 71-84) consisted of a convolution neural network with the following layers and layer sizes:
 
@@ -116,7 +116,7 @@ The final model architecture (model.py lines 71-84) consisted of a convolution n
 * Dense layer with 1 output and RELU activation
 
 
-####3. Creation of the Training Set & Training Process
+#### 3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded a few laps on track one first trying to stay on the center of the lane, then trying to recover if I was to close to the right or left border. Here is an example image of driving in track one:
 
@@ -135,6 +135,6 @@ To augment the data sat, I also flipped images and angles thinking that this wou
 
 After the collection process, I had 113,580 number of data points. I then preprocessed this data by scaling the color to be each one in the range of [-0.5, 0.5]. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 5 as evidenced by the loss rate, which was not improving with more epochs, I used an adam optimizer so that manually training the learning rate wasn't necessary.
 
-###Track Two
+### Track Two
 
 The final model was able to drive and stay on the road for track two, in fact it was doing a better job than me trying to do the manual training. I think track 2 provided a better way to train the model to recover and stay on track, because pretty much is what I was trying to do naturally. I recorded a video of a lap driving in Track Two, which can be watch in **video_track2.mp4**.
