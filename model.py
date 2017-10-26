@@ -2,18 +2,22 @@ import csv
 import cv2
 import numpy as np
 import sklearn
+import matplotlib.pyplot as plt
 from math import ceil
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Flatten, Dense, Convolution2D, MaxPooling2D, Dropout, Activation
 from keras.layers import Cropping2D, Lambda
-import matplotlib.pyplot as plt
+from keras.utils import plot_model
 
 
-TRAINING_LOG_FILE   = 'data/driving_log.csv'
-TRAINING_IMAGES_DIR = 'data/IMG/'
-MODEL_FILE          = 'model.h5'
-STEERING_CORRECTION = 0.2
+MODEL_VISUALIZATION_FILE = 'model_visualization.png'
+MODEL_STORY_FILE         = 'model_story.png'
+
+TRAINING_LOG_FILE        = 'data/driving_log.csv'
+TRAINING_IMAGES_DIR      = 'data/IMG/'
+MODEL_FILE               = 'model.h5'
+STEERING_CORRECTION      = 0.2
 
 def getImage(source_path):
     """
@@ -22,7 +26,7 @@ def getImage(source_path):
     """
     filename = source_path.split('/')[-1]
     current_path = TRAINING_IMAGES_DIR + filename
-    image = cv2.imread(current_path)
+    image = cv2.cvtColor(cv2.imread(current_path), cv2.COLOR_BGR2RGB)
     return image
 
 
@@ -117,15 +121,19 @@ model.save(MODEL_FILE)
 
 print('Traning finalized.')
 
+# Ploting model
+print('Ploting model...')
+plot_model(model, to_file=MODEL_VISUALIZATION_FILE)
 
-### Plotting the training and validation loss for each epoch
-print('Ploting loss history')
+# Plotting the training and validation loss for each epoch
+print('Ploting loss history...')
 plt.plot(model_history.history['loss'])
 plt.plot(model_history.history['val_loss'])
 plt.title('model mean squared error loss')
 plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
+plt.savefig(MODEL_STORY_FILE)
 plt.show()
 
 print('Done.')
